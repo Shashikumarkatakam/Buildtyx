@@ -7,23 +7,31 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: {
-  name: string;
-  phone: string;
-  email?: string;
-  password: string;
-}) {
-  const hashedPassword = await bcrypt.hash(data.password, 10);
+    name: string;
+    phone: string;
+    email?: string;
+    password: string;
+  }) {
+    const hashedPassword = await bcrypt.hash(data.password, 10);
 
-  const user = await this.prisma.user.create({
-    data: {
-      ...data,
-      password: hashedPassword,
+    const user = await this.prisma.user.create({
+      data: {
+        ...data,
+        password: hashedPassword,
+      },
+    });
+
+    const { password, ...result } = user;
+    return result;
+  }
+
+  async findByEmail(email: string) {
+    return this.prisma.user.findFirst({
+    where: {
+      email,
     },
-  });
-
-  const { password, ...result } = user;
-  return result;
-}
+    });
+  }
 
   findAll() {
     return this.prisma.user.findMany();

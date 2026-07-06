@@ -5,8 +5,11 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
 
+import { UsersModule } from '../users/users.module';
+
 @Module({
   imports: [
+    UsersModule,
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: {
